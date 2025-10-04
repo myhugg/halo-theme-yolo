@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title='图库：' + ${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized">
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.photos_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.photos_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.photos_patternimg)}" 
+                class="cover-image u-object-fit" 
+                src="https://cdn.playet.cn/themes/yolo/default-background.jpeg"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span>图库</span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span>Some photos taken casually.</span>
+                </div>
+            </div>
+        </div>    
+    </th:block> 
+    <th:block th:fragment="content">
+        <main class="site-main gh-inner">
+            <div class="container" th:each="group : ${groups}">
+                <a></a>
+                <h3 th:text="${group.spec.displayName}"></h3>
+                <div class="waterfall">
+                    <th:block th:each="photo : ${group.photos}">
+                        <span> 
+                            <a data-fancybox="gallery" th:href="@{${photo.spec.url}}" >
+                            <img th:alt="${photo.spec.description}" th:src="@{${photo.spec.cover}}" th:title="${photo.spec.displayName}"  >
+                            </a>
+                        </span>
+                    </th:block>
+              </div>
+            </div>
+            <div class="container_m">
+                <halo:comment
+                  group="content.halo.run"
+                  kind="SinglePage"
+                  name="photos"
+                  colorScheme="colorMode"
+                />
+            </div>
+        </main>
+    </th:block>
+</html>

@@ -1,0 +1,33 @@
+  <div class="gh-foot-inner gh-inner">
+    <hr/>
+     <div class="gh-foot-menu">
+        <ul>
+            <li th:each="item : ${theme.config.fotter.social_media}">
+                <a th:href="${item.url}" target="_blank" rel="noopener noreferrer">
+                    <i th:class="|${item.icon}|"></i>
+                    <span class="subscribe-text">[[${item.name}]]</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="gh-copyright">
+        <span>
+            ©
+            <th:block th:text="${#dates.format(new java.util.Date().getTime(), 'yyyy')}" />
+            <a href="/" class="hover:underline" th:text="${site.title}"></a>. Powered by
+            <a href="https://halo.run" class="hover:underline" target="_blank">Halo</a>.Theme 
+            <a href="https://playet.cn" class="hover:underline" target="_blank">YoLo</a>.
+        </span>
+    </div>
+    <div class="gh-copyright">
+        <span class="nav-current">
+          <a
+            href="https://beian.miit.gov.cn/"
+            class="hover:underline"
+            target="_blank"
+            th:href="${theme.config.beian.icp_link}"
+            th:text="${theme.config.beian.icp_text}"
+          ></a>
+        </span>
+    </div>
+</div>

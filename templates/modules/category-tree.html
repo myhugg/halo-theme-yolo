@@ -1,0 +1,15 @@
+<ul th:fragment="next (categories)">
+  <li th:fragment="single (categories)" th:each="categoryItem,categoryStat : ${categories}">
+    <a
+      th:href="@{${categoryItem.status.permalink}}"
+      th:title="${categoryItem.spec.displayName}"
+      th:classappend="(${category} and ${category.metadata.name == categoryItem.metadata.name}) ? 'active'"
+    >
+      <span th:text="${categoryItem.spec.displayName}"></span>
+      <span class="badge badge-sm" th:text="${categoryItem.status.visiblePostCount}"></span>
+    </a>
+    <th:block th:if="${not #lists.isEmpty(categoryItem.children)}">
+      <th:block th:replace="~{modules/category-tree :: next (categories=${categoryItem.children})}"></th:block>
+    </th:block>
+  </li>
+</ul>

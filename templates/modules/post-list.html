@@ -1,0 +1,95 @@
+<th:block th:each="post,iter : ${posts.items}">
+  <section
+    x-data="upvote('post','content.halo.run','posts')"
+    class="post-item animated fadeIn pb-12 md:flex"
+    th:style="|animation-delay: ${iter.index * 0.1}s|"
+  >
+    <a
+      th:if="${theme.config.post.list?.show_cover} and ${not #strings.isEmpty(post.spec.cover)}"
+      th:href="@{${post.status.permalink}}"
+      class="feature-image-wrapper relative mr-8 block h-56 w-full flex-shrink-0 rounded-lg bg-base-200 md:h-40 md:w-56"
+    >
+      <div
+        class="post-feature-image h-56 w-full md:h-40 md:w-56"
+        th:style="|background-image: url(${post.spec.cover});|"
+      ></div>
+      <span
+        th:if="${post.spec.pinned}"
+        class="absolute right-2 top-2 inline-flex items-center gap-x-1.5 rounded-full bg-primary/50 px-1.5 py-0.5 text-xs font-medium text-primary-content"
+      >
+        <svg class="h-1.5 w-1.5 fill-primary-content" viewBox="0 0 6 6" aria-hidden="true">
+          <circle cx="3" cy="3" r="3" />
+        </svg>
+        置顶
+      </span>
+    </a>
+    <div th:attr="x-data=|{name:'${post.metadata.name}'}|" class="content">
+      <a th:href="@{${post.status.permalink}}">
+        <h2 class="post-title mt-5 text-xl font-extrabold md:mt-0" th:text="${post.spec.title}"></h2>
+      </a>
+      <div
+        class="post-abstract my-4 line-clamp-3 font-light text-base-content/80"
+        th:text="${post.status.excerpt}"
+      ></div>
+      <div class="flex gap-2.5">
+        <div
+          th:if="${theme.config.post.list.show_categories} and ${not #lists.isEmpty(post.categories)}"
+          class="inline-flex items-center gap-1"
+        >
+          <div class="i-ri-archive-2-line !h-3 !w-3 text-base-content/50"></div>
+          <a
+            class="text-xs font-light text-base-content/50 hover:text-base-content"
+            th:each="category : ${post.categories}"
+            th:href="@{${category.status.permalink}}"
+            th:title="|分类：${category.spec.displayName}|"
+            th:text="${category.spec.displayName}"
+          ></a>
+        </div>
+        <div
+          th:if="${theme.config.post.list.show_tags} and ${not #lists.isEmpty(post.tags)}"
+          class="inline-flex items-center gap-1"
+        >
+          <div class="i-ri-hashtag !h-3 !w-3 text-base-content/50"></div>
+          <a
+            class="text-xs font-light text-base-content/50 hover:text-base-content"
+            th:each="tag : ${post.tags}"
+            th:href="@{${tag.status.permalink}}"
+            th:title="|标签：${tag.spec.displayName}|"
+            th:text="${tag.spec.displayName}"
+          ></a>
+        </div>
+        <div th:if="${theme.config.post.list.show_visit}" class="inline-flex items-center gap-1">
+          <div class="i-ri-eye-line !h-3 !w-3 text-base-content/50"></div>
+          <span class="text-xs font-light text-base-content/50" th:text="${post.stats.visit}"></span>
+        </div>
+        <div th:if="${theme.config.post.list.show_comments}" class="inline-flex items-center gap-1">
+          <div class="i-ri-message-3-line !h-3 !w-3 text-base-content/50"></div>
+          <a
+            class="text-xs font-light text-base-content/50"
+            th:href="@{${post.status.permalink}}"
+            th:text="${post.stats.comment}"
+          ></a>
+        </div>
+        <div
+          th:if="${theme.config.post.list.show_upvote}"
+          class="inline-flex cursor-pointer items-center gap-1"
+          x-bind:class="{'text-red-700': upvoted(name)}"
+          @click="handleUpvote(name)"
+        >
+          <div x-show="upvoted(name)" class="i-ri-heart-3-fill !h-3 !w-3"></div>
+          <div x-show="!upvoted(name)" class="i-ri-heart-3-line !h-3 !w-3 text-base-content/50"></div>
+          <span
+            class="text-xs font-light text-base-content/50"
+            th:attr="data-upvote-post-name=${post.metadata.name}"
+            th:text="${post.stats.upvote}"
+          ></span>
+        </div>
+        <div
+          class="text-xs font-light text-base-content/50"
+          th:title="${post.spec.publishTime}"
+          th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"
+        ></div>
+      </div>
+    </div>
+  </section>
+</th:block>

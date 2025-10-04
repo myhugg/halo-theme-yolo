@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title=${post.spec.title} + ' - ' + ${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized">
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.post_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.post_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.post_patternimg)}" 
+                class="cover-image u-object-fit" 
+                th:src="${post.spec.cover}"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span th:text="${post.spec.title}"></span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span class="cover-description_s_post">
+                        <i class="iconfont ri-calendar-2-line"></i><a> 发布于</a>
+                        <a><time th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time></a> | 
+                        <i class="ri-file-copy-2-line"></i>
+                        <span th:each="category : ${post.categories}"th:if="${not #lists.isEmpty(post.categories)}">
+                            <a class="post-meta-categories" th:href="@{${category.status.permalink}}" th:text="${category.spec.displayName}" th:title="${category.spec.displayName}"></a>
+                        </span> 
+                    </span> 
+                </div>
+                <div class="cover-description_s">
+                    <span class="cover-description_s_post" th:with="wordCount = ${#strings.length(post.content.content)}">
+                        <i class="iconfont ri-file-word-fill" title="字数"></i>
+                        <span>字数:</span>
+                        <span th:text="${{wordCount}}"></span>
+                        <span> |
+                        <i class="iconfont ri-time-line" title="阅读耗时"></i>
+                        <span>阅读耗时:</span>
+                        <span>[[${wordCount / 400}]] 分钟</span> |
+                        <i class="ri-bookmark-line"></i>
+                        <span th:if="!${#lists.isEmpty(post.tags)}">
+                            <a th:each="tag : ${post.tags}" th:href="@{${tag.status.permalink}}" th:title="${tag.spec.displayName}" th:text="| #${tag.spec.displayName}|"></a>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div> 
+    </th:block>
+    <th:block th:fragment="content">
+        <main class="site-main">
+            <div class="post-content gh-content gh-canvas">
+                <div class="article-post"  id="content" th:utext="${post.content.content}"></div>
+                    <!-- 评论 -->
+                    <span>
+                    <halo:comment
+                      group="content.halo.run"
+                      kind="Post"
+                      th:attr="name=${post.metadata.name}"
+                      colorScheme="colorMode"
+                    /></span>
+                </div>
+                <!--目录-->
+                <th:block th:replace="~{modules/catalog}" />
+            </div>
+        </main>
+    </th:block>
+</html>

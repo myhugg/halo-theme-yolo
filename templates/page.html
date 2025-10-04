@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title=${singlePage.spec.title} + ' - ' + ${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized">
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.page_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.page_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.page_patternimg)}" 
+                class="cover-image u-object-fit" 
+                src="https://cdn.playet.cn/themes/yolo/default-background.jpeg"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span th:text="${singlePage.spec.title}"></span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span>You can understand me.</span>
+                </div>
+            </div>
+        </div>    
+    </th:block> 
+    <th:block th:fragment="content">
+        <main class="site-main">
+            <div class="post-content gh-content gh-canvas">
+                <div class="markdown-body" th:utext="${singlePage.content.content}"></div>
+                    <!-- 评论 -->
+                <div class="comment-container">
+                    <halo:comment
+                        group="content.halo.run"
+                        kind="SinglePage"
+                        th:attr="name=${singlePage.metadata.name}"
+                        colorScheme="colorMode"
+                    />
+                </div>
+            </div>
+        </main>
+    </th:block>
+</html>

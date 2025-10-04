@@ -1,0 +1,63 @@
+<article
+  th:fragment="post-card(post,cover,animation,border,direction)"
+  class="post tag-technology"
+  th:classappend="${animation  ? 'hover:-translate-y-1' : ''} + ' ' + ${border ? 'hover:ring-2' : ''} + ' ' + ${direction == 'column' ? '!grid grid-cols-1 sm:grid-cols-5' : ''}"
+>
+    <div 
+    th:if="${cover} and ${not #strings.isEmpty(post.spec.cover)}"
+    class="post-media"
+    th:classappend="${direction == 'column' ? 'col-span-2' : ''}"
+    >
+        <div class="u-placeholder square">
+            <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}">
+                <img 
+                th:src="${post.spec.cover}"
+                th:alt="${post.spec.title}"
+                class="post-image lazyload u-object-fit"
+                th:classappend="${animation} ? 'group-hover:scale-105'"
+                >
+            </a>
+        </div>
+    </div>
+    <div class="post-wrapper">
+        <header class="post-header">
+            <div class="post-meta">
+                <span
+                    class="post-meta-item post-meta-date ri-calendar-line"
+                    th:text="| ${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}|"
+                >
+                </span>
+                <span class="post-meta-item post-meta-tags" >
+                    <a
+                    th:each="tag : ${post.tags}"
+                    th:href="@{${tag.status.permalink}}"
+                    th:title="${tag.spec.displayName}"
+                    th:text="|#${tag.spec.displayName}|"
+                    class="post-tag post-tag-technology"
+                    >
+                    </a>   
+                </span>
+            </div>
+            <h2
+             class="post-title post-meta-tags"
+             th:classappend="|${direction == 'column' ? 'sm:line-clamp-2' : ''} ${list_layout == 'grid_2' ? 'sm:line-clamp-3' : ''} ${list_layout == 'grid_3' ? 'sm:line-clamp-4' : ''}|"
+            >
+                <a th:href="${post.status.permalink}" class="post-title-link" th:title="${post.spec.title}" th:datetime="${post.spec.publishTime}" th:with="days=${(new java.util.Date().getTime()-post.spec.publishTime.toEpochMilli())/86400000}">
+                    <th:block th:if="${post.spec.pinned}">
+                        <span class="post-tag post-tag-technology" style="display: inline-block">[置顶]</span>
+                    </th:block>
+                    <th:block th:if="${days <= 5}">
+                        <span class="post-tag post-tag-technology" style="display: inline-block">[最新]</span>
+                    </th:block>
+                        [[${post.spec.title}]]
+                </a>
+            </h2>
+        </header>
+            <div 
+            class="post-excerpt"
+            th:text="${post.status.excerpt}"
+            th:classappend="${list_layout == 'grid_3' ? ' sm:line-clamp-8' : ''}"
+            >
+            </div>
+    </div>
+</article>

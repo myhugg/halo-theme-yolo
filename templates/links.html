@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title='朋友：' + ${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized">
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.links_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.links_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.links_patternimg)}" 
+                class="cover-image u-object-fit" 
+                src="https://cdn.playet.cn/themes/yolo/default-background.jpeg"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span>朋友</span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span>My good friend is here.</span>
+                </div>
+            </div>
+        </div>    
+    </th:block> 
+    <th:block th:fragment="content">
+        <main class="site-main">
+            <div class="post-content gh-content gh-canvas">
+                <div class="article-post">
+                    <h3>我的信息</h3>
+                        <ul>
+                            <li>站点名称：<span>[[${theme.config.Links.links_name}]]</span></li>
+                            <li>站点地址：<span>[[${theme.config.Links.links_links}]]</span></li>
+                            <li>站点Logo：<span>[[${theme.config.Links.links_icon}]]</span></li>
+                            <li>站点描述：<span>[[${theme.config.Links.links_ms}]]</span></li>
+                        </ul>
+                </div>
+                <div class="linkpage">
+                    <th:block th:each="group : ${groups}" th:if="${not #lists.isEmpty(group.links)}">
+                    <h3 th:if="${#lists.size(groups) > 1}" th:text="${group.spec.displayName}"></h3>
+                    <ul id="friendsList">
+                        <li th:each="link : ${group.links}">
+                            <a rel="nofollow" target="_blank" th:href="@{${link.spec.url}}">
+                                <img loading="lazy" th:src="${link.spec.logo}" th:alt="${link.spec.displayName}">
+                                <div class="linkpage_links" th:text="${link.spec.displayName}"></div>
+                                <p th:text="${link.spec.description}"></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <halo:comment
+                    group="content.halo.run"
+                    kind="SinglePage"
+                    name="links"
+                    colorScheme="colorMode"
+                />
+            </div>
+        </main>
+  </th:block>
+</html>

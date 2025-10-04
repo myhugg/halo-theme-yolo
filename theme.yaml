@@ -1,0 +1,17 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+metadata:
+  name: theme-yolo
+spec:
+  displayName: Theme Yolo
+  author:
+    name: 丹作百年
+    website: https://playet.cn
+  description: Yolo for Halo
+  logo: https://cdn.playet.cn/themes/yolo/avatar.png
+  website: https://playet.cn
+  repo: https://github.com/myhugg/halo-theme-yoyo
+  settingName: "theme-yolo-setting"
+  configMapName: "theme-yolo-configMap"
+  version: 1.0.2
+  require: 2.8.0

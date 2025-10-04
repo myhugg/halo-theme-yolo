@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title='瞬间：' + ${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized">
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.moments_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.moments_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.moments_patternimg)}" 
+                class="cover-image u-object-fit" 
+                src="https://cdn.playet.cn/themes/yolo/default-background.jpeg"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span>瞬间</span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span>What have you been busy with lately.</span>
+                </div>
+            </div>
+        </div>    
+    </th:block>
+    <th:block th:fragment="content">
+    <script th:src="@{/assets/js/moments.iife.js}"></script>
+       <main class="site-main">
+           <div class="gh-canvas">
+                <div class="moment">
+                    <ul role="list" class="post-list" x-data="momentComment">
+                        <li th:each="moment : ${moments.items}">
+                            <div class="article-post">
+                                <div class="moment-content-box">
+                                    <div class="post-meta">
+                                        <span style="color:'var(--ghost-accent-color)'"><a> By </a>
+                                            <a
+                                              th:with="authorPage=${#strings.append('/authors/',moment.owner?.name)}"
+                                              th:href="@{${authorPage}}"
+                                              th:text="${moment.owner?.displayName}"
+                                            ></a>
+                                            | <i class="iconfont ri-calendar-2-line"></i></span>
+                                        <span>
+                                            <relative-time
+                                                tense="past"
+                                                th:datetime="${moment.spec.releaseTime}"
+                                                data-view-component="true"
+                                                th:title="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
+                                                th:text="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd')}"
+                                            >
+                                            </relative-time>
+                                        </span>
+                                    </div>
+                                    <div th:utext="${moment.spec.content?.html}"></div>
+                                        <div th:attr="x-data=|{name: '${moment.metadata.name}'}|" class="operation">
+                                            <a
+                                              th:href="|javascript:handleLike('${moment.metadata.name}')|"
+                                              th:data-moment-name="${moment.metadata.name}"
+                                            >
+                                              <i class="ri-heart-line"></i>
+                                              <span th:data-moment-name="${moment.metadata.name}" th:text="${moment.stats.upvote}"></span>
+                                            </a>
+                                            <a @click="setCurrent(name)" style="margin-left: 5px; cursor: pointer">
+                                            <i class="ri-chat-2-line"></i>
+                                            <span th:text="${moment.stats.approvedComment}"></span>
+                                            </a>
+                                            <div x-show="current === name" style="display: none;">
+                                                <halo:comment
+                                                  group="moment.halo.run"
+                                                  kind="Moment"
+                                                  th:name="${moment.metadata?.name}"
+                                                  colorScheme="colorMode"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                <script>
+                    const likes_localstorage_key = "higan.likes.moment.ids";
+                    let likedMomentNames = JSON.parse(localStorage.getItem(likes_localstorage_key) || "[]");
+                    likedMomentNames.forEach((momentName) => {
+                      activeUpvote(momentName);
+                    });
+                    function liked(momentName) {
+                      return likedMomentNames.includes(momentName);
+                    }
+                    function handleLike(momentName) {
+                      if (liked(momentName)) {
+                        return;
+                      }
+                      const xhr = new XMLHttpRequest();
+                      xhr.open("POST", "/apis/api.halo.run/v1alpha1/trackers/upvote");
+                      xhr.onload = () => {
+                        likedMomentNames = [...likedMomentNames, momentName];
+                        localStorage.setItem(likes_localstorage_key, JSON.stringify(likedMomentNames));
+                        const likesNode = document.querySelector('span[data-moment-name="' + momentName + '"]');
+                        const likes = parseInt(likesNode.innerText);
+                        likesNode.innerText = likes + 1;
+                        activeUpvote(momentName);
+                      };
+                      xhr.onerror = function () {
+                        alert("网络请求失败，请稍后再试");
+                      };
+                      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                      xhr.send(
+                        JSON.stringify({
+                          group: "moment.halo.run",
+                          plural: "moments",
+                          name: momentName,
+                        })
+                      );
+                    }
+                    function activeUpvote(momentName) {
+                      var dom = document.querySelector(".moment .operation a[data-moment-name='" + momentName + "']");
+                      if (dom) {
+                        dom.style.color = "var(--ghost-accent-color)";
+                        dom.style.fontWeight = "500";
+                      }
+                    }
+                </script>
+                </div>
+            </div>
+              <th:block
+                        th:if="${moments.hasPrevious() || moments.hasNext()}"
+                        th:with="totalPages = ${moments.totalPages}, pageIndex = ${moments.page}">
+                    <!--        页面总数小于等于7-->
+                    <ul class="pagination" th:if="${(totalPages le 7) && (totalPages gt 0)}">
+                        <li class="prev"
+                            th:classappend="${1 eq pageIndex} ? ' disabled':''">
+                            <a th:href="@{${moments.prevUrl}}">
+                                <i class="pagination-font ri-skip-left-line"></i>
+                            </a>
+                        </li>
+                        <li th:classappend="${index eq pageIndex} ? 'active'"
+                            th:each="index : ${#numbers.sequence(1, totalPages)}">
+                            <a th:href="@{/moments}+'/page/'+ ${index}"
+                               th:text="${index}"></a>
+                        </li>
+                        <li class="next"
+                            th:classappend="${index eq totalPages} ? ' disabled':''">
+                            <a th:href="@{${moments.nextUrl}}">
+                                <i class="pagination-font ri-skip-right-line"></i>
+                            </a
+                            ></li>
+                    </ul>
+                    <!--        页面总数大于7-->
+                    <ul class="pagination" th:if="${totalPages gt 7}">
+                        <li class="prev"
+                            th:classappend="${1 eq pageIndex} ? ' disabled':''">
+                            <a th:href="@{${moments.prevUrl}}">
+                                <i class="pagination-font ri-skip-left-line"></i>
+                            </a>
+                        </li>
+        
+                        <li th:classappend="${1 eq pageIndex} ? 'active':''">
+                            <a href="/">1</a>
+                        </li>
+                        <!-- 当前页面小于等于4 -->
+                        <li th:classappend="${index eq pageIndex} ? 'active':''"
+                            th:each="index : ${#numbers.sequence(2,5)}"
+                            th:if="${pageIndex le 4}">
+                            <a th:href="@{/moments}+'/page/' + ${index}"
+                               th:text="${index}"></a>
+                        </li>
+                        <li th:if="${pageIndex le 4}">
+                            <a href="#">...</a>
+                        </li>
+                        <!-- 最后一页与当前页面之差小于等于3 -->
+                        <li th:if="${totalPages - pageIndex le 3}">
+                            <a href="#">...</a>
+                        </li>
+                        <li th:classappend="${index eq pageIndex} ? 'active':''"
+                            th:each="index : ${#numbers.sequence(totalPages - 4, totalPages - 1)}"
+                            th:if="${totalPages - pageIndex le 3}">
+                            <a th:href="@{/moments}+'/page/' + ${index}"
+                               th:text="${index}">
+                            </a>
+                        </li>
+                        <!-- 最后一页与当前页面之差大于3 且当前页面大于4 -->
+                        <li th:if="${(pageIndex gt 4) && (totalPages - pageIndex gt 3)}">
+                            <a href="#">...</a>
+                        </li>
+                        <li th:each="index : ${#numbers.sequence(pageIndex - 1,pageIndex + 1)}"
+                            th:classappend="${index eq pageIndex} ? 'active':''"
+                            th:if="${(pageIndex gt 4) && (totalPages - pageIndex gt 3)}">
+                            <a th:href="@{/moments}+'/page/' + ${index}"
+                               th:text="${index}">
+                            </a>
+                        </li>
+                        <li th:if="${(pageIndex gt 4) && (totalPages - pageIndex gt 3)}">
+                            <a href="#">...</a>
+                        </li>
+                        <!-- 尾页 -->
+                        <li th:classappend="${totalPages eq pageIndex} ? 'active':''"
+                        >
+                            <a th:href="@{/moments}+'/page/' + ${totalPages}"
+                               th:text="${totalPages}">
+                            </a>
+                        </li>
+                        <li class="next"
+                            th:href="@{${posts.nextUrl}}"
+                            th:classappend="${index eq totalPages} ? ' disabled':''">
+                            <a th:href="@{${moments.nextUrl}}">
+                                <i class="pagination-font ri-skip-right-line"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </th:block>
+        </main>
+    </th:block>
+</html>

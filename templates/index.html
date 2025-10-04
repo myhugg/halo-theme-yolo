@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title=${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized" >
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.index_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.index_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.index_patternimg)}" 
+                class="cover-image u-object-fit" 
+                src="https://cdn.playet.cn/themes/yolo/default-background.jpeg"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span th:text="${site.title}"></span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span th:text="${site.subtitle}"></span>
+                </div>
+            </div>
+        </div>
+    </th:block>
+    <th:block th:fragment="content">
+        <div
+      th:if="${posts.total gt 0}"
+      th:with="postItems=${posts.items},list_layout=${theme.config.layout.post_list_layout}"
+      class="gh-outer"
+      th:classappend="|${list_layout == 'grid_3' ? 'md:grid-cols-2 xl:grid-cols-3' : ''} ${list_layout == 'grid_2' ? 'md:grid-cols-2' : ''}|"
+    >
+        <main class="site-main gh-inner">
+           <div class="post-feed">
+                <th:block th:each="post : ${postItems}">
+                    <th:block
+                    th:replace="~{modules/post-card :: post-card(${post},true,true,true,${list_layout == 'single' ? 'column' : 'row'})}"
+                    />
+                </th:block>
+            </div>
+        </main>
+       
+    </div>
+        <div th:if="${posts.total == 0}">
+          <span>当前没有文章</span>
+        </div>
+    <th:block th:replace="~{modules/pagination}" />
+    </th:block>
+    </th:block>
+</html>

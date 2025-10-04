@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="modules/layout :: html(hero = ~{::hero},content = ~{::content}, title='归档：' + ${site.title})">
+    <th:block th:fragment="hero">
+        <div class="site-cover u-overlay initialized">
+            <img 
+                th:if="${not #strings.isEmpty(theme.config.head_img.archives_patternimg)}"
+                class="cover-image u-object-fit" 
+                th:src="${theme.config.head_img.archives_patternimg}" alt="YoLo">
+            <img
+                th:if="${#strings.isEmpty(theme.config.head_img.archives_patternimg)}" 
+                class="cover-image u-object-fit" 
+                src="https://cdn.playet.cn/themes/yolo/default-background.jpeg"  alt="YoLo">
+            <div class="cover-content">
+                <div class="cover-description_t">
+                    <span>归档</span>
+                </div>
+                <hr class="cover-description_l" />
+                <div class="cover-description_s">
+                    <span>All articles that I write.</span>
+                </div>
+            </div>
+        </div>    
+    </th:block>  
+    <th:block th:fragment="content">
+        <div class="gh-outer">
+            <main class="site-main gh-inner">
+                <div class="post-feed gh-feed">
+                    <article class="archives-article">
+                        <div id="archives-temp" class="archives-inner">
+                            <div class="archives-content">
+                              <th:block th:each="archive, archiveStat : ${archives.items}">
+                                <th:block th:each="month, monthStat : ${archive.months}">
+                                  <div class="archive-item active"  th:id="|arti-${archive.year}-${month.month}|">
+                                    <div class="archive-title">
+                                        <h3 th:text="${archive.year}+'年'+${month.month}+'月'"></h3>
+                                    </div>
+                                    <div
+                                      class="archive-posts"
+                                      th:classappend="|archives-${monthStat.index}|"
+                                      th:attr="data-date=${archive.year}+'-'+${month.month}"
+                                      style="overflow: hidden">
+                                      <div class="archive-post-item" th:each="post : ${month.posts}">
+                                       <!--<span class="archive-post-circle"></span>-->
+                                        <div class="brick">
+                                          <a data-pjax th:href="@{${post.status.permalink}}" aria-label="get the next article">
+                                            <span class="time">
+                                              <span class="iconify iconify--large" data-icon="ic:round-access-time"></span>
+                                              <th:block th:text="${#dates.format(post.spec.publishTime,'MM-dd')}"></th:block>
+                                            </span>
+                                            <th:block th:text="${post.spec.title}"></th:block>
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </th:block>
+                              </th:block>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!--底部分页-->
+                <th:block
+                    th:if="${archives.hasPrevious() || archives.hasNext()}"
+                    th:with="totalPages = ${archives.totalPages}, pageIndex = ${archives.page}">
+                            <!--        页面总数小于等于7-->
+                    <ul class="pagination" th:if="${(totalPages le 7) && (totalPages gt 0)}">
+                        <li class="prev"
+                            th:classappend="${1 eq pageIndex} ? ' disabled':''">
+                            <a th:href="@{${archives.prevUrl}}">
+                                <i class="pagination-font ri-skip-left-line"></i>
+                            </a>
+                        </li>
+                        <li th:classappend="${index eq pageIndex} ? 'active'"
+                            th:each="index : ${#numbers.sequence(1, totalPages)}">
+                            <a th:href="@{/archives/page/} + ${index}"
+                               th:text="${index}"></a>
+                        </li>
+                        <li class="next"
+                            th:classappend="${index eq totalPages} ? ' disabled':''">
+                            <a th:href="@{${archives.nextUrl}}">
+                            <i class="pagination-font ri-skip-right-line"></i>
+                            </a
+                        ></li>
+                    </ul>
+                            <!--        页面总数大于7-->
+                    <ul class="pagination" th:if="${totalPages gt 7}">
+                        <li class="prev"
+                            th:classappend="${1 eq pageIndex} ? ' disabled':''">
+                            <a th:href="@{${archives.prevUrl}}">
+                                <i class="pagination-font ri-skip-left-line"></i>
+                            </a>
+                        </li>
+        
+                        <li th:classappend="${1 eq pageIndex} ? 'active':''">
+                            <a href="/">1</a>
+                        </li>
+                              <!-- 当前页面小于等于4 -->
+                        <li th:classappend="${index eq pageIndex} ? 'active':''"
+                            th:each="index : ${#numbers.sequence(2,5)}"
+                            th:if="${pageIndex le 4}">
+                            <a th:href="@{/archives/page/} + ${index}"
+                               th:text="${index}"></a>
+                        </li>
+                        <li th:if="${pageIndex le 4}">
+                            <a href="#">...</a>
+                        </li>
+                        <!-- 最后一页与当前页面之差小于等于3 -->
+                        <li th:if="${totalPages - pageIndex le 3}">
+                            <a href="#">...</a>
+                        </li>
+                        <li th:classappend="${index eq pageIndex} ? 'active':''"
+                            th:each="index : ${#numbers.sequence(totalPages - 4, totalPages - 1)}"
+                            th:if="${totalPages - pageIndex le 3}">
+                            <a th:href="@{/archives/page/} + ${index}"
+                               th:text="${index}">
+                            </a>
+                        </li>
+                        <!-- 最后一页与当前页面之差大于3 且当前页面大于4 -->
+                        <li th:if="${(pageIndex gt 4) && (totalPages - pageIndex gt 3)}">
+                            <a href="#">...</a>
+                        </li>
+                        <li th:each="index : ${#numbers.sequence(pageIndex - 1,pageIndex + 1)}"
+                            th:classappend="${index eq pageIndex} ? 'active':''"
+                            th:if="${(pageIndex gt 4) && (totalPages - pageIndex gt 3)}">
+                            <a th:href="@{/archives/page/} + ${index}"
+                               th:text="${index}">
+                            </a>
+                        </li>
+                        <li th:if="${(pageIndex gt 4) && (totalPages - pageIndex gt 3)}">
+                            <a href="#">...</a>
+                        </li>
+                        <!-- 尾页 -->
+                        <li th:classappend="${totalPages eq pageIndex} ? 'active':''"
+                        >
+                            <a th:href="@{/archives/page/}+${totalPages}"
+                               th:text="${totalPages}">
+                            </a>
+                        </li>
+                        <li class="next"
+                            th:href="@{${archives.nextUrl}}"
+                            th:classappend="${index eq totalPages} ? ' disabled':''">
+                            <a th:href="@{${archives.nextUrl}}">
+                                <i class="pagination-font ri-skip-right-line"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </th:block>
+            </main>
+        </div>
+        <div th:if="${archives.total == 0}" class="mt-6 flex items-center justify-center">
+            <span class="text-sm font-light text-gray-600">当前没有文章</span>
+        </div>
+    </th:block>
+</html>

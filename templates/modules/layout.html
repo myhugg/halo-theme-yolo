@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!--<html lang="en" th:fragment="html (content,title)" data-user-color-scheme="light">-->
+<html lang="en" th:fragment="html (hero,content,title)" >
+    <th:block th:replace="~{modules/header}" th:with="title=${title}" />
+    <th:block th:replace="~{modules/navigation}" />
+    <th:block th:replace="${hero}" />
+        <div class="site-content">
+            <th:block th:replace="${content}" />
+        </div>
+    <th:block th:replace="~{modules/fotter}" />
+    </th:block>
+    <th:block th:replace="~{modules/action}" />
+    </th:block>
+</html>

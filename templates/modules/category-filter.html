@@ -1,0 +1,22 @@
+<ul>
+  <th:block th:with="categories = ${categoryFinder.listAsTree()}">
+    <li th:each="categoryItem,categoryStat : ${categories}">
+      <a
+        th:if="${#lists.isEmpty(categoryItem.children)}"
+        th:href="@{${categoryItem.status.permalink}}"
+        th:classappend="(${category} and ${category.metadata.name == categoryItem.metadata.name}) or (not ${category} and ${categoryStat.index == 0}) ? 'active'"
+      >
+        <span th:text="${categoryItem.spec.displayName}"></span>
+      </a>
+
+      <details th:if="${not #lists.isEmpty(categoryItem.children)}">
+        <summary>
+          <a th:href="@{${categoryItem.status.permalink}}" th:text="${categoryItem.spec.displayName}"></a>
+        </summary>
+        <ul>
+          <li th:replace="~{modules/category-tree :: single(categories=${categoryItem.children})}" />
+        </ul>
+      </details>
+    </li>
+  </th:block>
+</ul>

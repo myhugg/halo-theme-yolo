@@ -1,0 +1,30 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" th:content="${description}"/>
+  <title th:text="${title}"></title>
+  <link rel="icon" th:href="${site.favicon}">
+  <!-- jquery3.7.1 -->
+  <th:block th:if="${theme.config.cdns.jquery}">
+  <script defer type="text/javascript" th:src="${theme.config.cdns.jquery_url}"></script>
+  </th:block>
+  <th:block th:else>
+  <script  type="text/javascript" th:src="@{/assets/plugins/jquery-3.7.1.min.js}"></script>
+  </th:block>
+  <!-- site css -->
+  <link rel="stylesheet" th:href="@{/assets/dist/screen.css}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.playet.cn/themes/remixicon/remixicon.css" />
+  <link rel="stylesheet" th:href="@{/assets/dist/fancybox.css}"/>
+  <!-- site js -->
+  <script type="text/javascript" th:src="@{/assets/js/main.iife.js}"></script>
+  <script th:src="@{/assets/js/fancybox.js}"></script>
+  <script th:src="@{/assets/js/fancybox.umd.js}"></script>
+  <!-- gtag & footer view -->
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('data-user-color-scheme')
+    if (colorMode) {
+      document.documentElement.setAttribute('data-user-color-scheme', colorMode)
+    }
+  </script>
+</head>
