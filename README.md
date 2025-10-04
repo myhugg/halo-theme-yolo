@@ -8,12 +8,13 @@
 ![enter image description here](https://cdn.playet.cn/halo/442BC5EA-54A9-4c58-80FA-91D5445FB4C5.jpg)
 
 预览地址：https://playet.cn
-## 插件依赖
+## 插件
 -   友情链接（/links）：[https://halo.run/store/apps/app-hfbQg](https://halo.run/store/apps/app-hfbQg)
 -   图库（/photos）：[https://halo.run/store/apps/app-BmQJW](https://halo.run/store/apps/app-BmQJW)
 -   瞬间（/moments）：[https://halo.run/store/apps/app-SnwWD](https://halo.run/store/apps/app-SnwWD)  
 -   highlight.js 代码高亮：[https://halo.run/store/apps/app-sqpgf](https://halo.run/store/apps/app-sqpgf)
 -  灯箱：已集无需安装
 - 图标库支持: [remixicon](https://remixicon.com/)
-## 使用方式
-自行下载：https://github.com/myhugg/halo-theme-yolo
+## 版本
+Halo版本要求：2.8.0及以上  
+
