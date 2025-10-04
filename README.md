@@ -13,8 +13,8 @@
 -   图库（/photos）：[https://halo.run/store/apps/app-BmQJW](https://halo.run/store/apps/app-BmQJW)
 -   瞬间（/moments）：[https://halo.run/store/apps/app-SnwWD](https://halo.run/store/apps/app-SnwWD)  
 -   highlight.js 代码高亮：[https://halo.run/store/apps/app-sqpgf](https://halo.run/store/apps/app-sqpgf)
--  灯箱：已集无需安装
-- 图标库支持: [remixicon](https://remixicon.com/)
+-  灯箱：已集成无需安装
+- 图标库支持: [remixicon](https://remixicon.com/)（已集成）
 ## 版本
 Halo版本要求：2.8.0及以上。  
 ## 更新
