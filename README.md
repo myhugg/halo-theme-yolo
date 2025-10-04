@@ -1,4 +1,4 @@
-最近看到ghost里的[wave](https://ghost.org/themes/wave/)主题挺漂亮的， 又萌生了移植的想法，有了[第一次移植](https://playet.cn/archives/b0a649ec-1e32-48a7-96c8-a7b0370d64f9)的经验，主题也很快移植成功，并添加了一些原主题没有的功能，如暗黑、回到顶部等。
+最近看到ghost里的[wave](https://ghost.org/themes/wave/)主题挺漂亮的， 又萌生了移植的想法，有了[第一次移植](https://playet.cn/archives/b0a649ec-1e32-48a7-96c8-a7b0370d64f9)的经验，主题也很快移植成功，并添加了一些原主题没有的功能，如暗黑和回到顶部等。
 ## 说明
 该主题的原作者为  Podcast，非常感谢做出这么优秀的主题。
 
@@ -17,4 +17,5 @@
 - 图标库支持: [remixicon](https://remixicon.com/)
 ## 版本
 Halo版本要求：2.8.0及以上  
-
+## 更新
+修正了一些已知的错误，在最新版的Halo使用正常
