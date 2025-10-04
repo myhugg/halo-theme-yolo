@@ -7,11 +7,11 @@ spec:
   author:
     name: 丹作百年
     website: https://playet.cn
-  description: Yolo for Halo
+  description: halo-theme-yolo
   logo: https://cdn.playet.cn/themes/yolo/avatar.png
   website: https://playet.cn
-  repo: https://github.com/myhugg/halo-theme-yoyo
+  repo: https://github.com/myhugg/halo-theme-yolo
   settingName: "theme-yolo-setting"
   configMapName: "theme-yolo-configMap"
   version: 1.0.2
-  require: 2.8.0
+  require: >=2.8.0
